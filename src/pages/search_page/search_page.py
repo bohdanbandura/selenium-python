@@ -1,27 +1,27 @@
 from selenium.common.exceptions import NoSuchElementException
-from src.base_page import BasePage
+from pages.base_page.base_page import BasePage
 
 class SearchPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         
     def get_number_of_found_items(self):
-        items_found = self.get_text_from_element('#center_column h1 .heading-counter')
+        items_found = self.get_text_from_element(self.search_page_locators.items_found_str)
         return int(items_found.split(':')[1])
     
     def select_number_of_items_on_page(self, num):
-        self.click_on_element('#nb_item')
-        self.click_on_element(f'#nb_item option[value="{num}"]')
+        self.click_on_element(self.search_page_locators.number_of_items_on_page_dropdown)
+        self.click_on_element(self.search_page_locators.number_of_items_to_select(num))
         
     def get_displayed_items(self):
-        return self.get_elements('#center_column ul.product_list li.ajax_block_product')
+        return self.get_elements(self.search_page_locators.product_block)
     
     def select_sorting_method(self, val):
-        self.click_on_element('#selectProductSort')
-        self.click_on_element(f'#selectProductSort option[value="{val}"]')
+        self.click_on_element(self.search_page_locators.sort_dropdown)
+        self.click_on_element(self.search_page_locators.sort_type_to_select(val))
         
     def get_item_price(self, item, selected_currency):
-        item_price = self.get_text_from_element('.right-block .content_price .price', item)
+        item_price = self.get_text_from_element(self.search_page_locators.product_price_str, item)
         item_price = item_price.replace(selected_currency, '').replace(',', '.').split(' ')
         return float(''.join(item_price))
 
@@ -46,9 +46,9 @@ class SearchPage(BasePage):
         for item in items_displayed:
             item_price = self.get_item_price(item, selected_currency)
             try:
-                old_price = self.get_text_from_element('.right-block .old-price', item)
+                old_price = self.get_text_from_element(self.search_page_locators.discount_product_old_price, item)
                 old_price = float(old_price.replace(selected_currency, '').replace(',', '.'))
-                discount = self.get_text_from_element('.right-block .price-percent-reduction', item)
+                discount = self.get_text_from_element(self.search_page_locators.discount_product_discount, item)
                 discount = abs(int(discount.replace('%', '')))
                 if old_price != 0 and discount != 0:
                     assert old_price - ((old_price / 100) * discount) == item_price

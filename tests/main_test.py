@@ -1,14 +1,16 @@
-from src.pages.main_page import MainPage
-from src.pages.search_page import SearchPage
+from pages.main_page.main_page import MainPage
+from pages.search_page.search_page import SearchPage
 from src.constants import BASE_URL
+import pytest
 
+pytest.mark.parametrize("driver", ['chrome', 'firefox', 'edge'])
 def test_main(driver):
     main_page = MainPage(driver)
     search_page = SearchPage(driver)
 
     main_page.open(BASE_URL)
     
-    active_tab = main_page.get_text_from_element('#home-page-tabs li[class="active"] a').lower()
+    active_tab = main_page.get_text_from_element(main_page.main_page_locators.active_tab).lower()
     assert active_tab == 'популярне'
     main_page.logger.info(f'POPULAR TAB IS OPENED, {active_tab == "популярне"}')
     
@@ -16,7 +18,7 @@ def test_main(driver):
     main_page.check_popular_items_currency(selected_currency_char)
     
     main_page.set_currency('Доллар')
-    selected_currency = main_page.get_text_from_element('#currencies-block-top .current strong')
+    selected_currency = main_page.get_text_from_element(main_page.base_locators.current_currency)
     assert selected_currency == 'USD'
     main_page.logger.info('USD CURRENCY IS SELECTED')
     
@@ -31,7 +33,7 @@ def test_main(driver):
     
     for item in items_displayed:
         selected_currency_char = search_page.get_current_currency()
-        item_price = search_page.get_text_from_element('.right-block .content_price .price', item)
+        item_price = search_page.get_text_from_element(main_page.main_page_locators.good_price, item)
         assert selected_currency_char in item_price
         search_page.logger.info(f'ASSERTATION SUCCESFULL, "{selected_currency_char}" in "{item_price}", EXPECTED CURRENCY DISPLAYED')
         
@@ -40,3 +42,4 @@ def test_main(driver):
     
     search_page.check_price_desc_sorting(items_displayed, selected_currency_char)
     search_page.check_discount(items_displayed, selected_currency_char)
+    
