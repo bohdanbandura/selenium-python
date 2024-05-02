@@ -20,7 +20,7 @@ def driver(request):
             options.add_argument('--headless')
             driver = webdriver.Firefox(options=options)
         except InvalidArgumentException:
-            firefox_binary = "/usr/bin/firefox"
+            firefox_binary = "/snap/bin/firefox"
             service = Service(firefox_binary=firefox_binary)
             options = webdriver.FirefoxOptions()
             options.add_argument('--headless')
