@@ -1,51 +1,29 @@
 from pages.main_page.main_page import MainPage
 from pages.search_page.search_page import SearchPage
 from src.constants import BASE_URL
+from src.pages.main_page.tests.check_currency_home_page import check_currency_home_page
+from src.pages.search_page.tests.check_items_displayed import check_items_displayed
+from src.pages.search_page.tests.check_currency_search_page import check_currency_search_page
+from src.pages.search_page.tests.check_sorting import check_sorting
 import pytest
 
-pytest.mark.parametrize("driver", ['chrome', 'firefox', 'edge'])
-def test_main(driver):
-    main_page = MainPage(driver)
-    search_page = SearchPage(driver)
-
-    main_page.open(BASE_URL)
+@pytest.mark.usefixtures("driver")
+class TestMain:
     
-    current_lang = main_page.get_text_from_element(main_page.base_locators.current_lang)
-    
-    if driver == 'firefox' or current_lang.title() != 'Українська':
-        main_page.click_on_element(main_page.base_locators.language_dropdown)
-        main_page.click_on_element(main_page.base_locators.language_to_select('Українська (Ukrainian)'))
-    
-    active_tab = main_page.get_text_from_element(main_page.main_page_locators.active_tab).lower()
-    assert active_tab == 'популярне'
-    main_page.logger.info(f'POPULAR TAB IS OPENED, {active_tab == "популярне"}')
-    
-    selected_currency_char = main_page.get_current_currency()
-    main_page.check_popular_items_currency(selected_currency_char)
-    
-    main_page.set_currency('Доллар')
-    selected_currency = main_page.get_text_from_element(main_page.base_locators.current_currency)
-    assert selected_currency == 'USD'
-    main_page.logger.info('USD CURRENCY IS SELECTED')
-    
-    main_page.search_items_by_name('dress')
-    
-    items_found = search_page.get_number_of_found_items()
-    search_page.select_number_of_items_on_page(60)
-    items_displayed = search_page.get_displayed_items()
-    items_count = len(items_displayed)
-    assert items_found == items_count
-    search_page.logger.info(f'RIGHT AMOUNT OF ITEMS ON PAGE, {items_found == items_count}')
-    
-    for item in items_displayed:
-        selected_currency_char = search_page.get_current_currency()
-        item_price = search_page.get_text_from_element(main_page.main_page_locators.good_price, item)
-        assert selected_currency_char in item_price
-        search_page.logger.info(f'ASSERTATION SUCCESFULL, "{selected_currency_char}" in "{item_price}", EXPECTED CURRENCY DISPLAYED')
+    def test_home_page(self, driver):
         
-    search_page.select_sorting_method('price:desc')
-    items_displayed = search_page.get_displayed_items()
+        main_page = MainPage(driver)
+        
+        main_page.open(BASE_URL)
+        check_currency_home_page(driver, main_page)
     
-    search_page.check_price_desc_sorting(items_displayed, selected_currency_char)
-    search_page.check_discount(items_displayed, selected_currency_char)
-    
+    def test_search_page(self, driver):
+        
+        main_page = MainPage(driver)
+        search_page = SearchPage(driver)
+        
+        main_page.search_items_by_name('dress')
+        items_displayed = check_items_displayed(search_page)
+        check_currency_search_page(search_page, main_page, items_displayed)
+        selected_currency_char, items_displayed = check_sorting(search_page)
+        search_page.check_discount(items_displayed, selected_currency_char)

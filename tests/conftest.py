@@ -6,7 +6,7 @@ from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.firefox.service import Service
 import pytest
 
-@pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
+@pytest.fixture(scope='class', params=['chrome', 'firefox', 'edge'])
 def driver(request):
     driver = None
     
@@ -24,6 +24,6 @@ def driver(request):
         driver = webdriver.Edge(options=options)
         
     driver.set_window_size(width=1920, height=1080)
+    
     yield driver
     driver.quit()
-
