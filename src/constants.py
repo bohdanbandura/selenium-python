@@ -1,0 +1,1 @@
+BASE_URL = 'http://prestashop.qatestlab.com.ua/'
