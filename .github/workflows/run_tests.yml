@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Check Mozila
-        run: whichis firefox
+        run: whereis firefox
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Setup Python
@@ -23,7 +23,7 @@ jobs:
           sudo apt-get install firefox
           sudo chmod +x /usr/bin/firefox
       - name: Check Mozila
-        run: whichis firefox
+        run: whereis firefox
       - name: Install Edge
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
