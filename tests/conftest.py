@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as chrome_options
 from selenium.webdriver.firefox.options import Options as firefox_options
 from selenium.webdriver.edge.options import Options as edge_options
+from selenium.common.exceptions import InvalidArgumentException
+from selenium.webdriver.firefox.service import Service
 import pytest
 
 @pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
@@ -13,9 +15,16 @@ def driver(request):
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
     elif request.param == 'firefox':
-        options = firefox_options()
-        options.add_argument('--headless')
-        driver = webdriver.Firefox(options=options)
+        try:
+            options = firefox_options()
+            options.add_argument('--headless')
+            driver = webdriver.Firefox(options=options)
+        except InvalidArgumentException:
+            firefox_binary = "/usr/bin/firefox"
+            service = Service(firefox_binary=firefox_binary)
+            options = webdriver.FirefoxOptions()
+            options.add_argument('--headless')
+            driver = webdriver.Firefox(options=options, service=service)
     elif request.param == 'edge':
         options = edge_options()
         options.add_argument('--headless')
