@@ -15,16 +15,9 @@ def driver(request):
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
     elif request.param == 'firefox':
-        try:
-            options = firefox_options()
-            options.add_argument('--headless')
-            driver = webdriver.Firefox(options=options)
-        except InvalidArgumentException:
-            firefox_binary = "/snap/bin/firefox"
-            service = Service(firefox_binary=firefox_binary)
-            options = webdriver.FirefoxOptions()
-            options.add_argument('--headless')
-            driver = webdriver.Firefox(options=options, service=service)
+        options = firefox_options()
+        options.add_argument('--headless')
+        driver = webdriver.Firefox(options=options)
     elif request.param == 'edge':
         options = edge_options()
         options.add_argument('--headless')
