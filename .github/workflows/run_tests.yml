@@ -29,6 +29,7 @@ jobs:
           Pin-Priority: 1000
           ' | sudo tee /etc/apt/preferences.d/mozilla
           sudo apt-get update && sudo apt-get install firefox
+          sudo apt-get install firefox-l10n-ua
       - name: Install Edge
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
