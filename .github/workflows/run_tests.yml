@@ -18,12 +18,6 @@ jobs:
           python-version: "3.11"
       - name: Install Chrome
         run: sudo apt-get install google-chrome-stable
-      - name: Install Firefox
-        run: |
-          sudo apt-get install firefox
-          sudo chmod +x /usr/bin/firefox
-      - name: Check Mozila
-        run: whereis firefox
       - name: Install Edge
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
