@@ -69,11 +69,11 @@ jobs:
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
       - name: Download allure report
         uses: actions/download-artifact@v3
-      - run: allure generate -c alliure-report -o _site
+      - run: allure generate -c allure-report -o _site
       - name: Store allure report
         uses: actions/upload-artifact@v3
         with:
-          name: allure-report
+          name: _site
           path: _site
           retention-days: 1
 
