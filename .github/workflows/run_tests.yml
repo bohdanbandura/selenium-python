@@ -77,9 +77,9 @@ jobs:
           path: _site
           retention-days: 1
 
-  publish-report:
+  publish_report:
     runs-on: ubuntu-latest
-    needs: generate-report
+    needs: generate_report
     name: Report publication
     steps:
       - name: Download all workflow run artifacts
