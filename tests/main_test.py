@@ -1,22 +1,22 @@
+import pytest
+from typing import Tuple
+
 from src.pages.main_page.main_page_tests import MainPageTests
 from src.pages.search_page.search_page_tests import SearchPageTests
+from src.pages.main_page.main_page import MainPage
+from src.pages.search_page.search_page import SearchPage
 
 from src.constants import BASE_URL
-from src.page_factory import PageFactory
 
-import pytest
+from selenium.webdriver.remote.webdriver import WebDriver
 
-# page_factory = PageFactory('chrome')
-# driver = page_factory.driver
-# main_page = page_factory.main_page
-# search_page = page_factory.search_page
 main_page_test = MainPageTests()
 search_page_test = SearchPageTests()
 
 @pytest.mark.usefixtures("pages")
 class TestMain:
     
-    def test_home_page(self, pages):
+    def test_home_page(self, pages: Tuple[WebDriver, MainPage, SearchPage]):
         
         driver, main_page, _ = pages
         
@@ -25,7 +25,7 @@ class TestMain:
         main_page_test.set_currency(main_page, 'Доллар')
         main_page.search_items_by_name('dress')
     
-    def test_search_page(self, pages):
+    def test_search_page(self, pages: Tuple[WebDriver, MainPage, SearchPage]):
         
         _, main_page, search_page = pages
                 

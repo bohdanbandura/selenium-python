@@ -9,7 +9,7 @@ from src.pages.main_page.main_page import MainPage
 from src.pages.search_page.search_page import SearchPage
 
 @pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
-def pages(request) -> Tuple[WebDriver, MainPage, SearchPage]:
+def pages(request):
     page_factory = None
     main_page = None
     search_page = None
@@ -26,5 +26,6 @@ def pages(request) -> Tuple[WebDriver, MainPage, SearchPage]:
     main_page = page_factory.main_page
     search_page = page_factory.search_page
     
-    return driver, main_page, search_page
+    yield driver, main_page, search_page
 
+    driver.quit()

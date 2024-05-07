@@ -1,7 +1,18 @@
 name: Automated tests
 
 on: 
-  push
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: 'Choose target'
+        required: true
+        default: 'All browsers'
+        type: choice
+        options:
+          - 'All browsers'
+          - 'Only Chrome'
+          - 'Only Firefox'
+          - 'Only Edge'
 
 jobs:
   test:
@@ -22,5 +33,15 @@ jobs:
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run tests
+      - name: All browsers
+        if: "github.events.inputs.deployment_target == 'All browsers'"
         run: pytest
+      - name: Only Chrome
+        if: "github.events.inputs.deployment_target == 'Only Chrome'"
+        run: pytest -v -k 'chrome'
+      - name: Only Firefox
+        if: "github.events.inputs.deployment_target == 'Only Firefox'"
+        run: pytest -v -k 'firefox'
+      - name: Only Edge
+        if: "github.events.inputs.deployment_target == 'Only Edge'"
+        run: pytest -v -k 'edge'
