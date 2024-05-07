@@ -34,14 +34,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: All browsers
-        if: github.events.inputs.deployment_target == all_browsers
+        if: "github.events.inputs.deployment_target == 'all_browsers'"
         run: pytest
       - name: Only Chrome
-        if: github.events.inputs.deployment_target == chrome_only
+        if: "github.events.inputs.deployment_target == 'chrome_only'"
         run: pytest -v -k 'chrome'
       - name: Only Firefox
-        if: github.events.inputs.deployment_target == firefox_only
+        if: "github.events.inputs.deployment_target == 'firefox_only'"
         run: pytest -v -k 'firefox'
       - name: Only Edge
-        if: github.events.inputs.deployment_target == edge_only
+        if: "github.events.inputs.deployment_target == 'edge_only'"
         run: pytest -v -k 'edge'
