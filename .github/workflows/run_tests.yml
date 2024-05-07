@@ -14,6 +14,11 @@ on:
           - firefox_only
           - edge_only
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -72,15 +77,15 @@ jobs:
           path: _site
           retention-days: 1
 
-  publish_report:
+  publish-report:
     runs-on: ubuntu-latest
-    needs: generate_report
-    name: Publish report
+    needs: generate-report
+    name: Report publication
     steps:
-      - name: Download report
+      - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
-      - name: Ipload report
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
-      - name: Deploy report
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1.2.9
