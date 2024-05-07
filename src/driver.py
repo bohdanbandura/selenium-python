@@ -24,4 +24,3 @@ class Driver:
     
         return driver
         
-        # driver.quit()
