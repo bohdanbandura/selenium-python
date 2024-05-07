@@ -1,29 +1,30 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as chrome_options
-from selenium.webdriver.firefox.options import Options as firefox_options
-from selenium.webdriver.edge.options import Options as edge_options
-from selenium.common.exceptions import InvalidArgumentException
-from selenium.webdriver.firefox.service import Service
+from typing import Tuple
+
+from selenium.webdriver.remote.webdriver import WebDriver
+
 import pytest
 
-@pytest.fixture(scope='class', params=['chrome', 'firefox', 'edge'])
-def driver(request):
+from src.page_factory import PageFactory
+from src.pages.main_page.main_page import MainPage
+from src.pages.search_page.search_page import SearchPage
+
+@pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
+def pages(request) -> Tuple[WebDriver, MainPage, SearchPage]:
+    page_factory = None
+    main_page = None
+    search_page = None
     driver = None
     
     if request.param == 'chrome':
-        options = chrome_options()
-        options.add_argument('--headless')
-        driver = webdriver.Chrome(options=options)
+        page_factory = PageFactory('chrome')
     elif request.param == 'firefox':
-        options = firefox_options()
-        options.add_argument('--headless')
-        driver = webdriver.Firefox(options=options)
+        page_factory = PageFactory('firefox')
     elif request.param == 'edge':
-        options = edge_options()
-        options.add_argument('--headless')
-        driver = webdriver.Edge(options=options)
+        page_factory = PageFactory('edge')
         
-    driver.set_window_size(width=1920, height=1080)
+    driver = page_factory.driver
+    main_page = page_factory.main_page
+    search_page = page_factory.search_page
     
-    yield driver
-    driver.quit()
+    return driver, main_page, search_page
+

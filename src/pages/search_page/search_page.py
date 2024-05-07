@@ -1,65 +1,27 @@
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
+
 from pages.base_page.base_page import BasePage
 
 class SearchPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         
-    def get_number_of_found_items(self):
+    def get_number_of_found_items(self) -> int:
         items_found = self.get_text_from_element(self.search_page_locators.items_found_str)
         return int(items_found.split(':')[1])
     
-    def select_number_of_items_on_page(self, num):
+    def select_number_of_items_on_page(self, num: int) -> None:
         self.click_on_element(self.search_page_locators.number_of_items_on_page_dropdown)
         self.click_on_element(self.search_page_locators.number_of_items_to_select(num))
         
-    def get_displayed_items(self):
+    def get_displayed_items(self) -> list[WebElement]:
         return self.get_elements(self.search_page_locators.product_block)
     
-    def select_sorting_method(self, val):
+    def select_sorting_method(self, val: str) -> None:
         self.click_on_element(self.search_page_locators.sort_dropdown)
         self.click_on_element(self.search_page_locators.sort_type_to_select(val))
         
-    def get_item_price(self, item, selected_currency):
+    def get_item_price(self, item: WebElement, selected_currency: str) -> float:
         item_price = self.get_text_from_element(self.search_page_locators.product_price_str, item)
         item_price = item_price.replace(selected_currency, '').replace(',', '.').split(' ')
         return float(''.join(item_price))
-
-    def check_price_desc_sorting(self, items_displayed, selected_currency):
-        price = 0
-        for item in items_displayed:
-            item_price = self.get_item_price(item, selected_currency)
-            if price == 0: 
-                price = item_price
-                continue
-            try:
-                assert price >= item_price
-                self.logger.info(f'ASSERTATION SUCCESFULL "{price}" >= "{item_price}" {price >= item_price}')
-                price = item_price
-            except:
-                self.logger.info('ASSERTATION FAILED, WRONG SORTING')
-                break
-    
-    def check_discount(self, items_displayed, selected_currency):
-        old_price = 0
-        discount = 0
-        for item in items_displayed:
-            item_price = self.get_item_price(item, selected_currency)
-            try:
-                old_price = self.get_text_from_element(self.search_page_locators.discount_product_old_price, item)
-                old_price = float(old_price.replace(selected_currency, '').replace(',', '.'))
-                discount = self.get_text_from_element(self.search_page_locators.discount_product_discount, item)
-                discount = abs(int(discount.replace('%', '')))
-                if old_price != 0 and discount != 0:
-                    assert old_price - ((old_price / 100) * discount) == item_price
-                    self.logger.info('ASSERTATION SUCCESFULL')
-                    self.logger.info(f'DISPLAYING PRICE: "{item_price}", EXPECTED PRICE: "{old_price - ((old_price / 100) * discount)}", {old_price - ((old_price / 100) * discount) == item_price}')
-                else: 
-                    continue
-            except NoSuchElementException:
-                self.logger.info(f'ELEMENT {item} HASN\'T DISCOUNT')
-                continue
-            except:
-                self.logger.info('ASSERTATION FAILED, WRONG DISCOUNT PRICE')
-                self.logger.info(f'DISPLAYING PRICE: "{item_price}", EXPECTED PRICE: "{old_price - ((old_price / 100) * discount)}" {old_price - ((old_price / 100) * discount) == item_price}')
-                continue

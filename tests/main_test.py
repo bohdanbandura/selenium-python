@@ -1,29 +1,35 @@
-from pages.main_page.main_page import MainPage
-from pages.search_page.search_page import SearchPage
+from src.pages.main_page.main_page_tests import MainPageTests
+from src.pages.search_page.search_page_tests import SearchPageTests
+
 from src.constants import BASE_URL
-from src.pages.main_page.tests.check_currency_home_page import check_currency_home_page
-from src.pages.search_page.tests.check_items_displayed import check_items_displayed
-from src.pages.search_page.tests.check_currency_search_page import check_currency_search_page
-from src.pages.search_page.tests.check_sorting import check_sorting
+from src.page_factory import PageFactory
+
 import pytest
 
-@pytest.mark.usefixtures("driver")
+# page_factory = PageFactory('chrome')
+# driver = page_factory.driver
+# main_page = page_factory.main_page
+# search_page = page_factory.search_page
+main_page_test = MainPageTests()
+search_page_test = SearchPageTests()
+
+@pytest.mark.usefixtures("pages")
 class TestMain:
     
-    def test_home_page(self, driver):
+    def test_home_page(self, pages):
         
-        main_page = MainPage(driver)
+        driver, main_page, _ = pages
         
         main_page.open(BASE_URL)
-        check_currency_home_page(driver, main_page)
-    
-    def test_search_page(self, driver):
-        
-        main_page = MainPage(driver)
-        search_page = SearchPage(driver)
-        
+        main_page_test.check_currency(driver, main_page)
+        main_page_test.set_currency(main_page, 'Доллар')
         main_page.search_items_by_name('dress')
-        items_displayed = check_items_displayed(search_page)
-        check_currency_search_page(search_page, main_page, items_displayed)
-        selected_currency_char, items_displayed = check_sorting(search_page)
-        search_page.check_discount(items_displayed, selected_currency_char)
+    
+    def test_search_page(self, pages):
+        
+        _, main_page, search_page = pages
+                
+        items_displayed = search_page_test.check_items_displayed(search_page)
+        search_page_test.check_currency(search_page, main_page, items_displayed)
+        selected_currency_char, items_displayed = search_page_test.check_sorting(search_page)
+        search_page_test.check_discount(search_page, items_displayed, selected_currency_char)
