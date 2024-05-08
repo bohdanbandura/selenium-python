@@ -14,6 +14,7 @@ search_page_test = SearchPageTests()
 @pytest.mark.usefixtures("pages")
 class TestMain:
     
+    @pytest.mark.P1
     def test_home_page(self, pages: Tuple[WebDriver, MainPage, SearchPage], base_url):
         
         driver, main_page, _ = pages
@@ -23,6 +24,7 @@ class TestMain:
         main_page_test.set_currency(main_page, 'Доллар')
         main_page.search_items_by_name('dress')
     
+    @pytest.mark.P2
     def test_search_page(self, pages: Tuple[WebDriver, MainPage, SearchPage]):
         
         _, main_page, search_page = pages
