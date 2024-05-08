@@ -9,10 +9,12 @@ on:
         default: all_browsers
         type: choice
         options:
-          - all_browsers
-          - chrome_only
-          - firefox_only
-          - edge_only
+          - production(all_browsers)
+          - staging(all_browsers)
+          - dev(all_browsers)
+          - chrome_only(production)
+          - firefox_only(production)
+          - edge_only(production)
 
 permissions:
   contents: read
@@ -38,17 +40,23 @@ jobs:
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: All browsers
-        if: "github.event.inputs.deployment_target == 'all_browsers'"
-        run: pytest --alluredir=allure-report
+      - name: Production Env
+        if: "github.event.inputs.deployment_target == 'production(all_browsers)'"
+        run: pytest --alluredir=allure-report --env production
+      - name: Staging Env
+        if: "github.event.inputs.deployment_target == 'staging(all_browsers)'"
+        run: pytest --alluredir=allure-report --env staging
+      - name: Dev Env
+        if: "github.event.inputs.deployment_target == 'dev(all_browsers)'"
+        run: pytest --alluredir=allure-report --env dev
       - name: Only Chrome
-        if: "github.event.inputs.deployment_target == 'chrome_only'"
+        if: "github.event.inputs.deployment_target == 'chrome_only(production)'"
         run: pytest -v -k 'chrome' --alluredir=allure-report
       - name: Only Firefox
-        if: "github.event.inputs.deployment_target == 'firefox_only'"
+        if: "github.event.inputs.deployment_target == 'firefox_only(production)'"
         run: pytest -v -k 'firefox' --alluredir=allure-report
       - name: Only Edge
-        if: "github.event.inputs.deployment_target == 'edge_only'"
+        if: "github.event.inputs.deployment_target == 'edge_only(production)'"
         run: pytest -v -k 'edge' --alluredir=allure-report
       - name: Store allure report
         uses: actions/upload-artifact@v3

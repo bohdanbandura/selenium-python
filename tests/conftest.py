@@ -1,12 +1,8 @@
-from typing import Tuple
-
-from selenium.webdriver.remote.webdriver import WebDriver
-
 import pytest
 
 from src.page_factory import PageFactory
-from src.pages.main_page.main_page import MainPage
-from src.pages.search_page.search_page import SearchPage
+
+from src.constants import PROD_URL, STAGING_URL, DEV_URL
 
 @pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
 def pages(request):
@@ -29,3 +25,16 @@ def pages(request):
     yield driver, main_page, search_page
 
     driver.quit()
+
+def pytest_addoption(parser):
+    parser.addoption('--env', action='store', default='production')
+    
+@pytest.fixture
+def base_url(request):
+    if request.config.getoption("--env") == 'production':
+        return PROD_URL
+    elif request.config.getoption("--env") == 'staging':
+        return STAGING_URL
+    elif request.config.getoption("--env") == 'dev':
+        return DEV_URL
+    
