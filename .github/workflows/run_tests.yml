@@ -43,28 +43,28 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Production Env
-        if: "github.event.inputs.deployment_target == 'production(all_browsers)'"
+        if: github.event.inputs.deployment_target == 'production(all_browsers)'
         run: pytest --alluredir=allure-report --env production
       - name: Staging Env
-        if: "github.event.inputs.deployment_target == 'staging(all_browsers)'"
+        if: github.event.inputs.deployment_target == 'staging(all_browsers)'
         run: pytest --alluredir=allure-report --env staging
       - name: Dev Env
-        if: "github.event.inputs.deployment_target == 'dev(all_browsers)'"
+        if: github.event.inputs.deployment_target == 'dev(all_browsers)'
         run: pytest --alluredir=allure-report --env dev
       - name: Only Chrome
-        if: "github.event.inputs.deployment_target == 'chrome_only'"
+        if: github.event.inputs.deployment_target == 'chrome_only'
         run: pytest -v -k 'chrome' --alluredir=allure-report
       - name: Only Firefox
-        if: "github.event.inputs.deployment_target == 'firefox_only'"
+        if: github.event.inputs.deployment_target == 'firefox_only'
         run: pytest -v -k 'firefox' --alluredir=allure-report
       - name: Only Edge
-        if: "github.event.inputs.deployment_target == 'edge_only'"
+        if: github.event.inputs.deployment_target == 'edge_only'
         run: pytest -v -k 'edge' --alluredir=allure-report
       - name: P1 suite
-        if: "github.event.inputs.deployment_target == 'highest_priority'"
+        if: github.event.inputs.deployment_target == 'highest_priority'
         run: pytest -v -m P1 --alluredir=allure-report
       - name: P2 suite
-        if: "github.event.inputs.deployment_target == 'lowest_priority'"
+        if: github.event.inputs.deployment_target == 'lowest_priority'
         run: pytest -v -m P2 --alluredir=allure-report
       - name: Store allure report
         uses: actions/upload-artifact@v3

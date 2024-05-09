@@ -1,5 +1,9 @@
 import pytest
 
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from datetime import datetime
+
 from src.page_factory import PageFactory
 
 from src.constants import PROD_URL, STAGING_URL, DEV_URL
@@ -23,7 +27,7 @@ def pages(request):
     search_page = page_factory.search_page
     
     yield driver, main_page, search_page
-
+    
     driver.quit()
 
 def pytest_addoption(parser):
@@ -37,4 +41,13 @@ def base_url(request):
         return STAGING_URL
     elif request.config.getoption("--env") == 'dev':
         return DEV_URL
-    
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    rep = outcome.get_result()
+
+    if rep.when == 'call' and rep.failed:
+        pages = item.funcargs['pages']
+        driver, _, _ = pages
+        driver.save_screenshot(f'./failed_screenshots/{item.name}_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.png')
