@@ -9,6 +9,7 @@ on:
         default: all_browsers
         type: choice
         options:
+          - all_browsers_parallel
           - production(all_browsers)
           - staging(all_browsers)
           - dev(all_browsers)
@@ -66,6 +67,9 @@ jobs:
       - name: P2 suite
         if: github.event.inputs.deployment_target == 'lowest_priority'
         run: pytest -v -m P2 --alluredir=allure-report
+      - name: Parallel all browsers
+        if: github.event.inputs.deployment_target == 'all_browsers_parallel'
+        run: pytest -v -n 3 --alluredir=allure-report
       - name: Store allure report
         uses: actions/upload-artifact@v3
         with:
