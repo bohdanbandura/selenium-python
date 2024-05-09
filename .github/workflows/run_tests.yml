@@ -76,6 +76,12 @@ jobs:
           name: allure-report
           path: allure-report
           retention-days: 1
+      - name: Store failed screenshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: failed_screenshots
+          path: failed_screenshots
+          retention-days: 1
 
   generate_report:
     runs-on: ubuntu-latest
