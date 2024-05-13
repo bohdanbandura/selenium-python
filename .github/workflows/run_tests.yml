@@ -63,10 +63,10 @@ jobs:
         run: pytest -v -k 'edge' --alluredir=allure-report
       - name: P1 suite
         if: github.event.inputs.deployment_target == 'highest_priority'
-        run: pytest -v -m P1 --alluredir=allure-report
+        run: pytest -v -m high_priority --alluredir=allure-report
       - name: P2 suite
         if: github.event.inputs.deployment_target == 'lowest_priority'
-        run: pytest -v -m P2 --alluredir=allure-report
+        run: pytest -v -m low_priority --alluredir=allure-report
       - name: Parallel all browsers
         if: github.event.inputs.deployment_target == 'all_browsers_parallel'
         run: pytest -v -n 3 --alluredir=allure-report
