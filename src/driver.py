@@ -24,3 +24,27 @@ class Driver:
     
         return driver
         
+
+class GridDriver:
+    def set_up(self, browser: str):
+        driver = None
+        options = None
+        
+        if browser == 'chrome':
+            options = chrome_options()
+            options.add_argument('--headless')
+        elif browser == 'firefox':
+            options = firefox_options()
+            options.add_argument('--headless')
+        elif browser == 'edge':
+            options = edge_options()
+            options.add_argument('--headless')
+            
+        driver = webdriver.Remote(
+            command_executor='http://192.168.0.42:4444',
+            options=options
+        )
+        
+        driver.maximize_window()
+    
+        return driver
