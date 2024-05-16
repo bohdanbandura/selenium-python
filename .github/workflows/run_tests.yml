@@ -78,13 +78,13 @@ jobs:
         if: github.event.inputs.deployment_target != 'api_testing_parallel'
         uses: actions/upload-artifact@v3
         with:
-          name: web-allure-report
+          name: allure-report
           path: ./web/allure-report
       - name: Store api allure report
         uses: actions/upload-artifact@v3
         if: github.event.inputs.deployment_target == 'api_testing_parallel'
         with:
-          name: api-allure-report
+          name: allure-report
           path: ./api/allure-report
       - name: Store failed screenshots
         uses: actions/upload-artifact@v3
