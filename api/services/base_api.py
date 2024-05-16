@@ -1,4 +1,5 @@
 import requests
+
 from api.services.api_tests_logger import logger
 
 class BaseApi:

@@ -18,6 +18,7 @@ on:
           - edge_only
           - highest_priority(all_browsers)
           - lowest_priority(all_browsers)
+          - api_testing_parallel
 
 permissions:
   contents: read
@@ -45,36 +46,41 @@ jobs:
         run: pip install -r requirements.txt
       - name: Production Env
         if: github.event.inputs.deployment_target == 'production(all_browsers)'
-        run: pytest --alluredir=allure-report --env production
+        run: pytest ./web --alluredir=web/allure-report --env production
       - name: Staging Env
         if: github.event.inputs.deployment_target == 'staging(all_browsers)'
-        run: pytest --alluredir=allure-report --env staging
+        run: pytest ./web --alluredir=web/allure-report --env staging
       - name: Dev Env
         if: github.event.inputs.deployment_target == 'dev(all_browsers)'
-        run: pytest --alluredir=allure-report --env dev
+        run: pytest ./web --alluredir=web/allure-report --env dev
       - name: Only Chrome
         if: github.event.inputs.deployment_target == 'chrome_only'
-        run: pytest -v -k 'chrome' --alluredir=allure-report
+        run: pytest ./web -v -k 'chrome' --alluredir=web/allure-report
       - name: Only Firefox
         if: github.event.inputs.deployment_target == 'firefox_only'
-        run: pytest -v -k 'firefox' --alluredir=allure-report
+        run: pytest ./web -v -k 'firefox' --alluredir=web/allure-report
       - name: Only Edge
         if: github.event.inputs.deployment_target == 'edge_only'
-        run: pytest -v -k 'edge' --alluredir=allure-report
+        run: pytest ./web -v -k 'edge' --alluredir=web/allure-report
       - name: P1 suite
         if: github.event.inputs.deployment_target == 'highest_priority'
-        run: pytest -v -m high_priority --alluredir=allure-report
+        run: pytest ./web -v -m high_priority --alluredir=web/allure-report
       - name: P2 suite
         if: github.event.inputs.deployment_target == 'lowest_priority'
-        run: pytest -v -m low_priority --alluredir=allure-report
+        run: pytest ./web -v -m low_priority --alluredir=web/allure-report
       - name: Parallel all browsers
         if: github.event.inputs.deployment_target == 'all_browsers_parallel'
-        run: pytest -v -n 3 --alluredir=allure-report
+        run: pytest ./web -v -n 3 --alluredir=web/allure-report
+      - name: API testing
+        if: github.event.inputs.deployment_target == 'api_testing_parallel'
+        run: pytest ./api -v -n auto --alluredir=api/allure-report
       - name: Store allure report
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
-          path: allure-report
+          if: github.event.inputs.deployment_target != 'api_testing_parallel'
+          path: web/allure-report
+          else: api/allure-report
           retention-days: 1
       - name: Store failed screenshots
         uses: actions/upload-artifact@v3
