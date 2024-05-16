@@ -4,10 +4,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from resources.ui.enums import AvailableCurrencies
+from web.resources.enums import AvailableCurrencies
 from services.logger_init import init_logger
-from services.ui.ui_tests_logger import log_info
-from resources.ui.locators import BaseLocators, MainPageLocators, SearchPageLocators
+from web.services.ui_tests_logger import log_info
+from web.resources.locators import BaseLocators, MainPageLocators, SearchPageLocators
 
 import allure
         

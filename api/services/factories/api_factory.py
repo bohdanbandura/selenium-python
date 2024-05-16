@@ -1,4 +1,4 @@
-from services.api.conduit_requests import UserApi, ArticleApi, CommentApi
+from api.services.conduit_requests import UserApi, ArticleApi, CommentApi
 
 class ApiFactory():
     def __init__(self):

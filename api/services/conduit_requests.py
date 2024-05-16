@@ -1,4 +1,4 @@
-from services.api.base_api import BaseApi
+from api.services.base_api import BaseApi
 
 class UserApi(BaseApi):
     def __init__(self):

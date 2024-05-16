@@ -1,5 +1,5 @@
 import requests
-from services.api.api_tests_logger import logger
+from api.services.api_tests_logger import logger
 
 class BaseApi:
     def __init__(self):

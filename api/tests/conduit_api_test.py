@@ -1,22 +1,8 @@
-from services.api.factories.api_factory import ApiFactory
-from services.api.factories.check_response_factory import CheckResponseFactory
-from services.api.factories.data_factory import DataFactory
+from api.services.factories.api_factory import ApiFactory
+from api.services.factories.check_response_factory import CheckResponseFactory
+from api.services.factories.data_factory import DataFactory
 
-from services.api.api_tests_logger import logger
-
-import pytest
-
-@pytest.fixture
-def api():
-    return ApiFactory()
-
-@pytest.fixture
-def check():
-    return CheckResponseFactory()
-
-@pytest.fixture
-def data():
-    return DataFactory()
+from api.services.api_tests_logger import logger
 
 class TestConduitApi:
     def test_sign_up(self, api: ApiFactory, data: DataFactory):

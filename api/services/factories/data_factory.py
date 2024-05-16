@@ -1,4 +1,4 @@
-from resources.api.data_generator import ConduitUser, ConduitArticle
+from api.resources.data_generator import ConduitUser, ConduitArticle
 
 class DataFactory:
     def __init__(self):

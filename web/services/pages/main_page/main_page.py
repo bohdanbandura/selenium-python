@@ -1,4 +1,4 @@
-from services.ui.pages.base_page.base_page import BasePage
+from web.services.pages.base_page.base_page import BasePage
 import allure
 
 class MainPage(BasePage):
