@@ -53,7 +53,7 @@ def take_creenshot_on_failure(request):
     if item.rep_call.failed:
         if not os.path.isdir('failed_screenshots'):
             os.mkdir('failed_screenshots')
-        driver.save_screenshot(f'./failed_screenshots/{item.name}_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.png')
+        driver.save_screenshot(f'./web/failed_screenshots/{item.name}_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.png')
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):    

@@ -1,6 +1,6 @@
 from services.logger_init import init_logger
 
-logger = init_logger('main_test')
+logger = init_logger('web/main_test')
 
 def log_info(error_mesage):
     def decorator(func):
