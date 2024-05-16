@@ -74,14 +74,18 @@ jobs:
       - name: API testing
         if: github.event.inputs.deployment_target == 'api_testing_parallel'
         run: pytest ./api -v -n auto --alluredir=api/allure-report
-      - name: Store allure report
+      - name: Store web allure report
+        if: github.event.inputs.deployment_target != 'api_testing_parallel'
         uses: actions/upload-artifact@v3
         with:
-          name: allure-report
-          if: github.event.inputs.deployment_target != 'api_testing_parallel'
+          name: web-allure-report
           path: web/allure-report
-          else: api/allure-report
-          retention-days: 1
+      - name: Store api allure report
+        uses: actions/upload-artifact@v3
+        if: github.event.inputs.deployment_target == 'api_testing_parallel'
+        with:
+          name: api-allure-report
+          path: api/allure-report
       - name: Store failed screenshots
         uses: actions/upload-artifact@v3
         with:
