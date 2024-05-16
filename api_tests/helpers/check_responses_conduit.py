@@ -1,17 +1,17 @@
 class User:
-    def check_user_signed_in_and_up(res, actual_data):
+    def signed_in(self, res):
         if 'username' in res:
-            assert res['username'] == actual_data['user']['username'], 'Wrong username added'
+            assert res['username'] == 'ronaldyoung', 'Wrong username added'
         else: print('username is absent into user body')
         if 'email' in res:
-            assert res['email'] == actual_data['user']['email'], 'Wrong email added'
+            assert res['email'] == 'lawrence03@example.org', 'Wrong email added'
         else: print('email is absent into user body')
         if 'token' in res:
             assert len(res['token']) > 0, 'Token is not assigned to user'
         else: print('token is absent into user body')
 
 class Article:
-    def check_article_response(res, actual_data, username):
+    def response(self, res, actual_data, username):
         if 'slug' in res:
             assert len(res['slug']) > 0, 'Slug is not assigned to article'
         else: print('slug is absent into article body')
@@ -23,7 +23,7 @@ class Article:
         else: print('author is absent into article body')
 
 class Comment:
-    def check_comment_response(res, actual_data, username):
+    def response(self, res, actual_data, username):
         if 'id' in res:
             assert len(str(res['id'])) > 0, "Comment id is empty"
         else: print('id is absent into comment body')

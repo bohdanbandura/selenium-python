@@ -1,67 +1,67 @@
-from helpers.conduit_requests import get, post, put, delete
-from helpers.check_responses_conduit import User, Article, Comment
-from api_tests.helpers.data_generator import *
+from helpers.factories.api_factory import ApiFactory
+from helpers.factories.check_response_factory import CheckResponseFactory
+from api_tests.helpers.factories.data_factory import DataFactory
+
+import pytest
+
+@pytest.fixture
+def api():
+    return ApiFactory()
+
+@pytest.fixture
+def check():
+    return CheckResponseFactory()
+
+@pytest.fixture
+def data():
+    return DataFactory()
 
 class TestConduitApi:
-    def test_sign_up(self):
-        response = post("users", user_conduit_body)
-        if response.status_code == 200:
-            user = response.json()['user']
-            User.check_user_signed_in_and_up(user, user_conduit_body)
-            print('User succesfully created')
+    def test_sign_up(self, api: ApiFactory, data: DataFactory):
+        user = api.user.sign_up(data.user_sign_up)
+        print(user)
+        print('User succesfully created')
 
-    
-    def test_sign_in(self):
-        user_login_body['user']['email'] = user_conduit_body['user']['email']
-        user_login_body['user']['password'] = user_conduit_body['user']['password']
-        response = post("users/login", user_login_body)
-        global token
-        global username
-        if response.status_code == 200:
-            user = response.json()['user']
-            User.check_user_signed_in_and_up(user, user_conduit_body)
-            token = user['token']
-            username = user['username']
-            print('User succesfully signed in')
+    def test_sign_in(self, api: ApiFactory, check: CheckResponseFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        check.user.signed_in(user)
+        print('User succesfully signed in')
         
-    def test_create_article(self):
-        response = post("articles", article_conduit_body, token=token)
-        global article_slug
-        if response.status_code == 200:
-            article = response.json()['article']
-            Article.check_article_response(article, article_conduit_body, username)
-            article_slug = article['slug']
-            print('Article succesfully created')
+    def test_create_article(self, api: ApiFactory, check: CheckResponseFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        article = api.article.create_article(user['token'], data.create_article)
+        check.article.response(article, data.create_article, user['username'])
+        print('Article succesfully created')
     
-    def test_update_article(self):
-        response = put(f"articles/{article_slug}", article_conduit_body, token=token)
-        if response.status_code == 200:
-            article = response.json()['article']
-            Article.check_article_response(article, article_conduit_body, username)
-            print("Article succesfully updated")
+    def test_update_article(self, api: ApiFactory, check: CheckResponseFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        article = api.article.create_article(user['token'], data.create_article)
+        updated_article = api.article.update_article(user['token'], data.create_article, article['slug'])
+        check.article.response(updated_article, data.create_article, user['username'])
+        print('Article succesfully created')
     
-    def test_add_comment(self):
-        response = post(f"articles/{article_slug}/comments", comment_conduit_body, token=token)
-        global comment_id
-        if response.status_code == 200:
-            comment = response.json()['comment']
-            Comment.check_comment_response(comment, comment_conduit_body, username)
-            comment_id = response.json()['comment']['id']
-            print("Comment succesfully created")
+    def test_add_comment(self, api: ApiFactory, data: DataFactory, check: CheckResponseFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        article = api.article.create_article(user['token'], data.create_article)
+        comment = api.comment.add_comment(user['token'], data.create_comment, article['slug'])
+        check.comment.response(comment, data.create_comment, user['username'])
+        print("Comment succesfully created")
     
-    def test_delete_comment(self):
-        response = delete(f"articles/{article_slug}/comments/{comment_id}", token=token)
-        if response.status_code == 204:
-            print("Comment succesfully deleted")
+    def test_delete_comment(self, api: ApiFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        article = api.article.create_article(user['token'], data.create_article)
+        comment = api.comment.add_comment(user['token'], data.create_comment, article['slug'])
+        api.comment.delete_comment(user['token'], article['slug'], comment['id'])
+        print("Comment succesfully deleted")
     
-    def test_delete_article(self):
-        response = delete(f"articles/{article_slug}", token=token)
-        if response.status_code == 204:
-            print("Article succesfully deleted")
+    def test_delete_article(self, api: ApiFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        article = api.article.create_article(user['token'], data.create_article)
+        api.article.delete(user['token'], article['slug'])
+        print("Article succesfully deleted")
     
-    def test_update_user(self):
-        user_update_conduit_body['user']['token'] = token
-        response = put("user", user_update_conduit_body, token=token)
-        updated_user = response.json()['user']
-        if response.status_code == 200:
-            print("User succesfully updated")
+    def test_update_user(self, api: ApiFactory, data: DataFactory):
+        user = api.user.sign_in(data.user_sign_in)
+        updated_user = api.user.update_user(user['token'], data.user_update)
+        print(updated_user)
+        print("User succesfully updated")

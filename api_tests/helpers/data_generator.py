@@ -1,78 +1,69 @@
 from faker import Faker
+from dataclasses import dataclass, asdict, field
 
 def create_tags():
     tags = []
     for _ in range(5):
         tags.append(Faker().word())
-    return tags
+    return tags    
 
-user_create_body = {
-    "title": "mr",
-    "firstName": Faker().first_name(),
-    "lastName": Faker().last_name(),
-    "gender": "male",
-    "email": Faker().email(),
-    "dateOfBirth": "2/9/1999",
-}
-
-user_update_body = {
-    "firstName": Faker().first_name(),
-    "lastName": Faker().last_name()
-}
-
-post_create_body = {
-    'text': Faker().catch_phrase(),
-    'image': Faker().image_url(),
-    'likes': 0,
-    'tags': ['tag1', 'tag2']
-}
-
-post_update_body = {
-    'text': Faker().catch_phrase(),
-    'tags': create_tags()
-}
-
-comment_create_body = {
-    'message': Faker().catch_phrase()
-}
-
-user_conduit_body = {
-    "user": {
-        "email": Faker().email(),
-        "password": Faker().word(),
-        "username": Faker().user_name()
-    }
-}
-
-user_login_body = {
-    "user": {
-        "email": "afdsfa@afasdf.com",
-        "password": "gdfgdg"
-    } 
-}
-
-article_conduit_body = {
-    "article": {
-        "title": Faker().catch_phrase(),
-        "description": Faker().text(max_nb_chars=20),
-        "body": Faker().text(max_nb_chars=70),
-        "tagList": create_tags()
-    }
-}
-
-comment_conduit_body = {
-    "comment": {
-        "body": Faker().catch_phrase()
-    }
-}
-
-user_update_conduit_body = {
-    "user": {
-        "image": Faker().image_url(),
-        "username": Faker().user_name(),
-        "bio": Faker().catch_phrase(),
-        "email": Faker().email(),
-        "token": "",
-        "effectiveImage": Faker().image_url()
-    }
-}
+@dataclass
+class ConduitUser:
+    email: str = field(default_factory=lambda: Faker().email())
+    password: str = field(default_factory=lambda: Faker().password())
+    username: str = field(default_factory=lambda: Faker().user_name())
+    image: str = field(default_factory=lambda: Faker().image_url())
+    bio: str = field(default_factory=lambda: Faker().catch_phrase())
+    token: str = ''
+    effectiveImage: str = field(default_factory=lambda: Faker().image_url())
+    existing_user: dict = field(default_factory=lambda: {
+        'user': {
+            'email': 'lawrence03@example.org', 
+            'password': 'drop'
+        }
+    })
+    
+    def sign_up_body(self):
+        return {
+            'user': {
+                'email': self.email,
+                'password': self.password,
+                'username': self.username
+            }
+        }
+        
+    def update_body(self):
+        return {
+            'user': {
+                'image': self.image,
+                'bio': self.bio,
+                'token': self.token,
+                'effectiveImage': self.effectiveImage
+            }
+        }
+    
+@dataclass
+class ConduitArticle:
+    title: str = field(default_factory=lambda: Faker().catch_phrase())
+    description: str = field(default_factory=lambda: Faker().text(max_nb_chars=20))
+    body: str = field(default_factory=lambda: Faker().text(max_nb_chars=70))
+    tagList: list = field(default_factory=lambda: create_tags())
+    comment: str = field(default_factory=lambda: Faker().catch_phrase())
+    
+    def create_body(self):
+        return {
+            'article': {
+                'title': self.title,
+                'description': self.description,
+                'body': self.body,
+                'tagList': self.tagList
+            }
+        }
+        
+    def add_comment(self):
+        return {
+            "comment": {
+                "body": self.comment
+            }
+        }
+        
