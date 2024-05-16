@@ -2,7 +2,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 import allure
 
-from pages.base_page.base_page import BasePage
+from services.ui.pages.base_page.base_page import BasePage
 
 class SearchPage(BasePage):
     def __init__(self, driver):

@@ -1,4 +1,4 @@
-from helpers.check_responses_conduit import User, Article, Comment
+from services.api.check_responses_conduit import User, Article, Comment
 
 class CheckResponseFactory:
     def __init__(self):

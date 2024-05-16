@@ -1,10 +1,10 @@
 import pytest
 from typing import Tuple
 
-from src.pages.main_page.main_page_tests import MainPageTests
-from src.pages.search_page.search_page_tests import SearchPageTests
-from src.pages.main_page.main_page import MainPage
-from src.pages.search_page.search_page import SearchPage
+from services.ui.pages.main_page.main_page_tests import MainPageTests
+from services.ui.pages.search_page.search_page_tests import SearchPageTests
+from services.ui.pages.main_page.main_page import MainPage
+from services.ui.pages.search_page.search_page import SearchPage
 
 from selenium.webdriver.remote.webdriver import WebDriver
 

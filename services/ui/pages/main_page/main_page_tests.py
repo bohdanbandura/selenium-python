@@ -1,4 +1,4 @@
-from src.pages.main_page.main_page import MainPage
+from services.ui.pages.main_page.main_page import MainPage
 import allure
 class MainPageTests():
     

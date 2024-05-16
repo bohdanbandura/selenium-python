@@ -1,4 +1,4 @@
-from api_tests.helpers.data_generator import ConduitUser, ConduitArticle
+from resources.api.data_generator import ConduitUser, ConduitArticle
 
 class DataFactory:
     def __init__(self):

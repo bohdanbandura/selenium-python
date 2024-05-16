@@ -3,9 +3,8 @@ import allure
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 
-from src.pages.search_page.search_page import SearchPage
-from src.pages.main_page.main_page import MainPage
-from src.logger_init import log_info
+from services.ui.pages.search_page.search_page import SearchPage
+from services.ui.pages.main_page.main_page import MainPage
 
 class SearchPageTests:
 

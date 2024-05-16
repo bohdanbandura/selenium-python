@@ -1,4 +1,4 @@
-from api_tests.helpers.base_api import BaseApi
+from services.api.base_api import BaseApi
 
 class UserApi(BaseApi):
     def __init__(self):

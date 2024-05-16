@@ -4,16 +4,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from src.enums import AvailableCurrencies
-from src.logger_init import init_logger, log_info
-from src.locators import BaseLocators, MainPageLocators, SearchPageLocators
+from resources.ui.enums import AvailableCurrencies
+from services.logger_init import init_logger
+from services.ui.ui_tests_logger import log_info
+from resources.ui.locators import BaseLocators, MainPageLocators, SearchPageLocators
 
 import allure
         
 class BasePage:
     def __init__(self, driver: WebDriver):
         self.driver = driver
-        self.logger = init_logger()
+        self.logger = init_logger('main_test')
         self.wait = WebDriverWait(self.driver, 10)
         self.base_locators = BaseLocators()
         self.main_page_locators = MainPageLocators()

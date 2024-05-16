@@ -4,9 +4,9 @@ import os
 
 from datetime import datetime
 
-from src.page_factory import PageFactory
+from services.ui.page_factory import PageFactory
 
-from src.constants import PROD_URL, STAGING_URL, DEV_URL
+from resources.ui.constants import PROD_URL, STAGING_URL, DEV_URL
 
 @pytest.fixture(scope='module', params=['chrome', 'firefox', 'edge'])
 @allure.title("Prepare pages for the test")

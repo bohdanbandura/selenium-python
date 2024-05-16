@@ -1,5 +1,5 @@
 from faker import Faker
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 
 def create_tags():
     tags = []
