@@ -19,6 +19,9 @@ on:
           - highest_priority(all_browsers)
           - lowest_priority(all_browsers)
           - api_testing_parallel
+          - api_testing_production
+          - api_testing_staging
+          - api_testing_development
 
 permissions:
   contents: read
@@ -70,10 +73,19 @@ jobs:
         run: pytest ./web -v -m low_priority --alluredir=./web/allure-report
       - name: Parallel all browsers
         if: github.event.inputs.deployment_target == 'all_browsers_parallel'
-        run: pytest ./web -v -n 3 --alluredir=web/allure-report
+        run: pytest ./web -v -n 3 --alluredir=./web/allure-report
       - name: API testing
         if: github.event.inputs.deployment_target == 'api_testing_parallel'
         run: pytest ./api -v -n auto --alluredir=./api/allure-report
+      - name: API testing production
+        if: github.event.inputs.deployment_target == 'api_testing_production'
+        run: pytest ./api -v -n auto --alluredir=./api/allure-report --env production
+      - name: API testing staging
+        if: github.event.inputs.deployment_target == 'api_testing_staging'
+        run: pytest ./api -v -n auto --alluredir=./api/allure-report --env staging
+      - name: API testing development
+        if: github.event.inputs.deployment_target == 'api_testing_development'
+        run: pytest ./api -v -n auto --alluredir=./api/allure-report --env development
       - name: Store web allure report
         if: github.event.inputs.deployment_target != 'api_testing_parallel'
         uses: actions/upload-artifact@v3

@@ -1,10 +1,11 @@
 import requests
 
 from api.services.api_tests_logger import logger
+from api.services.config_parser import ConfigParser
 
 class BaseApi:
     def __init__(self):
-        self.base_url = 'https://conduit.mate.academy/api'
+        self.base_url = ConfigParser().get()
         self.headers = {'Authorization': ''}
         self.log_info = lambda method, url, headers, response: logger.info(f'\n{method} {url}\nHeaders - {headers}\nStatus code: {response.status_code}\nResponse: {response.text if method != "DELETE" else response}')
         

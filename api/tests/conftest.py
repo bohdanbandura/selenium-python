@@ -15,3 +15,6 @@ def check():
 @pytest.fixture
 def data():
     return DataFactory()
+
+def pytest_addoption(parser):
+    parser.addoption('--env', action='store', default='production')
