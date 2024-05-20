@@ -9,6 +9,7 @@ on:
         default: all_browsers
         type: choice
         options:
+          - sound_check
           - all_browsers_parallel
           - production(all_browsers)
           - staging(all_browsers)
@@ -47,6 +48,9 @@ jobs:
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Sound Check
+        if: github.event.inputs.deployment_target == 'sound_check'
+        run: python ./test.py
       - name: Production Env
         if: github.event.inputs.deployment_target == 'production(all_browsers)'
         run: pytest ./web --alluredir=./web/allure-report --env production
