@@ -48,6 +48,8 @@ jobs:
         run: sudo apt-get install microsoft-edge-stable
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Install soundcheck
+        run: sudo apt install portaudio19-dev
       - name: Sound Check
         if: github.event.inputs.deployment_target == 'sound_check'
         run: python ./test.py
