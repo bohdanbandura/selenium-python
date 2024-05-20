@@ -7,6 +7,7 @@ class ConfigParser:
         self.config.read('config.ini')
 
     def get(self):
+        print(sys.orig_argv, 'args')
         env_index = sys.argv.index('--env')
         env = sys.argv[env_index + 1]
         return self.config.get(env, 'base_url')
